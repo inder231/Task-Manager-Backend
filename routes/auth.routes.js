@@ -2,6 +2,8 @@ const { User } = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const createError = require("http-errors");
+const { redis } = require("../config/redis");
+const { auth } = require("../middlewares/auth");
 
 const authRouter = require("express").Router();
 
@@ -74,9 +76,15 @@ authRouter.post("/login", async (req, res, next) => {
   }
 });
 
-authRouter.get("/logout", async (req, res, next) => {
+authRouter.get("/logout", auth, async (req, res, next) => {
   try {
     // check if token is blacklisted : logic here
+    const access_token = req?.cookies?.access_token;
+    const refresh_token = req?.cookies?.refresh_token;
+    // if (access_token || refresh_token) {
+    //   await redis.set(access_token, "blacklisted", "EX", 10 * 60);
+    //   await redis.set(refresh_token, "blacklisted", "EX", 10 * 60);
+    // }
     res.clearCookie("access_token");
     res.clearCookie("refresh_token");
     res.status(204).send({ message: "Logout successful" });
@@ -85,7 +93,7 @@ authRouter.get("/logout", async (req, res, next) => {
   }
 });
 
-authRouter.get("/refresh-token", async (req, res, next) => {
+authRouter.get("/refresh-token", auth, async (req, res, next) => {
   try {
     const refreshToken = req.cookies.refresh_token;
     if (!refreshToken) throw createError.BadRequest();

@@ -69,36 +69,49 @@ describe("Register - Login - Logout", () => {
           res.body.should.have.property("message").eql("Login success.");
           res.should.have.cookie("access_token").not.undefined;
           res.should.have.cookie("refresh_token").not.undefined;
-          access_token = res.headers['set-cookie'][0].split("=")[1].split(";")[0]
-          refresh_token = res.headers['set-cookie'][1].split("=")[1].split(";")[0]
+          access_token = res.headers["set-cookie"][0]
+            .split("=")[1]
+            .split(";")[0];
+          refresh_token = res.headers["set-cookie"][1]
+            .split("=")[1]
+            .split(";")[0];
           done();
         }
       });
   });
-  it("should check if access token is generate using refresh token",(done)=>{
-    chai.request(app)
-    .get("/auth/refresh-token")
-    .set("Cookie",`access_token=${access_token}; refresh_token=${refresh_token}`)
-    .end((err,res)=>{
-      res.should.have.status(204);
-      done();
-    })
-  })
-  it("should check that access token is not generate if token is not in cookies",(done)=>{
-    chai.request(app)
-    .get("/auth/refresh-token")
-    .end((err,res)=>{
-      res.should.have.status(400);
-      done();
-    })
-  })
+  it("should check if access token is generate using refresh token", (done) => {
+    chai
+      .request(app)
+      .get("/auth/refresh-token")
+      .set(
+        "Cookie",
+        `access_token=${access_token}; refresh_token=${refresh_token}`
+      )
+      .end((err, res) => {
+        res.should.have.status(204);
+        done();
+      });
+  });
+  it("should check that access token is not generate if token is not in cookies", (done) => {
+    chai
+      .request(app)
+      .get("/auth/refresh-token")
+      .end((err, res) => {
+        // res.should.have.status(400);
+        res.should.have.status(401) // || res.should.have.status(400);  ( or does not work here);
+        done();
+      });
+  });
   it("should logout user", (done) => {
     chai
       .request(app)
       .get("/auth/logout")
+      .set(
+        "Cookie",
+        `access_token=${access_token}; refresh_token=${refresh_token}`
+      )
       .end((err, res) => {
         if (err) {
-          console.error(err);
           done(err);
         } else {
           res.should.have.status(204);
