@@ -5,6 +5,8 @@ const { authRouter } = require("./routes/auth.routes");
 const { connection } = require("./config/db");
 
 const createError = require("http-errors");
+const { taskRouter } = require("./routes/task.routes");
+const {auth} = require("./middlewares/auth");
 
 require("dotenv").config();
 
@@ -29,13 +31,12 @@ app.get("/", (req, res) => {
 });
 
 app.use("/auth", authRouter);
-
+app.use("/task", auth, taskRouter);
 
 // Handling the route which is not created.
 app.use((req, res, next) => {
   next(createError.NotFound());
 });
-
 
 // Error handler.
 app.use((err, req, res, next) => {

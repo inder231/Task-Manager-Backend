@@ -53,12 +53,12 @@ authRouter.post("/login", async (req, res, next) => {
     if (!verifyPassword) throw createError.Unauthorized("Invalid credentials.");
     // Generate jwt token
     const access_token = jwt.sign(
-      { userId: isUserPresent._id, email },
+      { userId: isUserPresent._id, email, role: isUserPresent.role },
       process.env.JWT_ACCESS_KEY,
       { expiresIn: "1m" }
     );
     const refresh_token = jwt.sign(
-      { userId: isUserPresent._id, email },
+      { userId: isUserPresent._id, email, role: isUserPresent.role },
       process.env.JWT_REFRESH_KEY,
       { expiresIn: "3m" }
     );
@@ -93,15 +93,15 @@ authRouter.get("/logout", auth, async (req, res, next) => {
   }
 });
 
-authRouter.get("/refresh-token", auth, async (req, res, next) => {
+authRouter.get("/refresh-token", async (req, res, next) => {
   try {
     const refreshToken = req.cookies.refresh_token;
     if (!refreshToken) throw createError.BadRequest();
     const isTokenValid = jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY);
     if (!isTokenValid) throw createError.Unauthorized("Please login again.");
-    const { userId, email, ...rest } = isTokenValid; // userId and email from refreshToken payload
+    const { userId, email, role, ...rest } = isTokenValid; // userId and email from refreshToken payload
     const newAccessToken = jwt.sign(
-      { userId, email },
+      { userId, email, role },
       process.env.JWT_ACCESS_KEY,
       { expiresIn: "1m" }
     );

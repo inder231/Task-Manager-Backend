@@ -11,16 +11,9 @@ const TaskSchema = mongoose.Schema(
       enum: ["To Do", "In Progress", "Done"],
       default: "To Do",
     },
-    assignedTo: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    project: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Project",
-      required: true,
-    },
+    createdBy: { type: "String", required: true },
+    assignedTo: { type: "String", required: true },
+    project: { type: "String", required: true },
   },
   { timestamps: true }
 );
