@@ -97,8 +97,7 @@ describe("Register - Login - Logout", () => {
       .request(app)
       .get("/auth/refresh-token")
       .end((err, res) => {
-        // res.should.have.status(400);
-        res.should.have.status(401) // || res.should.have.status(400);  ( or does not work here);
+        res.should.have.status(401);
         done();
       });
   });

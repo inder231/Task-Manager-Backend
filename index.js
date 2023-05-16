@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/auth", authRouter);
-app.use("/task", auth, taskRouter);
+app.use("/task", taskRouter);
 
 // Handling the route which is not created.
 app.use((req, res, next) => {

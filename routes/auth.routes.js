@@ -96,7 +96,7 @@ authRouter.get("/logout", auth, async (req, res, next) => {
 authRouter.get("/refresh-token", async (req, res, next) => {
   try {
     const refreshToken = req.cookies.refresh_token;
-    if (!refreshToken) throw createError.BadRequest();
+    if (!refreshToken) throw createError.Unauthorized();
     const isTokenValid = jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY);
     if (!isTokenValid) throw createError.Unauthorized("Please login again.");
     const { userId, email, role, ...rest } = isTokenValid; // userId and email from refreshToken payload
