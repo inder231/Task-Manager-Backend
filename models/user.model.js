@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "user",
       enum: ["user", "manager"],
-    },
+    }
   },
   { timestamps: true }
 );

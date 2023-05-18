@@ -10,7 +10,6 @@ const authRouter = require("express").Router();
 authRouter.get("/users", async (req, res, next) => {
   try {
     const users = await User.find();
-    console.log(req.cookies);
     res.status(200).send({ users });
   } catch (error) {
     next(error);
@@ -81,10 +80,10 @@ authRouter.get("/logout", auth, async (req, res, next) => {
     // check if token is blacklisted : logic here
     const access_token = req?.cookies?.access_token;
     const refresh_token = req?.cookies?.refresh_token;
-    // if (access_token || refresh_token) {
-    //   await redis.set(access_token, "blacklisted", "EX", 10 * 60);
-    //   await redis.set(refresh_token, "blacklisted", "EX", 10 * 60);
-    // }
+    if (access_token || refresh_token) {
+      await redis.set(access_token, "blacklisted", "EX", 10 * 60);
+      await redis.set(refresh_token, "blacklisted", "EX", 10 * 60);
+    }
     res.clearCookie("access_token");
     res.clearCookie("refresh_token");
     res.status(204).send({ message: "Logout successful" });

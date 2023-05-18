@@ -3,10 +3,13 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const { authRouter } = require("./routes/auth.routes");
 const { connection } = require("./config/db");
-
+require("./oauth/google");
 const createError = require("http-errors");
 const { taskRouter } = require("./routes/task.routes");
-const {auth} = require("./middlewares/auth");
+const { auth } = require("./middlewares/auth");
+const passport = require("passport");
+const jwt = require("jsonwebtoken");
+const session = require("express-session");
 
 require("dotenv").config();
 
@@ -18,11 +21,20 @@ const port = process.env.PORT || 8080;
 app.use(cookieParser());
 app.use(express.json()); // body parser
 app.use(express.urlencoded({ extended: true })); //  parses data passed in urlencoded form
+app.use(express.static("public"));
 app.use(
   cors({
     origin: "*",
   })
 );
+// app.use(
+//   session({
+//     secret: "YourSessionSecret",
+//     resave: false,
+//     saveUninitialized: false,
+//   })
+// );
+
 const isProduction = process.env.NODE_ENV === "production";
 
 // Home route
@@ -30,6 +42,33 @@ app.get("/", (req, res) => {
   res.status(200).send({ message: "Task manager" });
 });
 
+app.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: "/auth/google",
+    session: false,
+  }),
+  function (req, res) {
+    console.log("inside callback", req.user);
+    // Generate jwt token and store in cookies
+    const access_token = jwt.sign({ ...req.user }, process.env.JWT_ACCESS_KEY, {
+      expiresIn: "1m",
+    });
+    res.cookie("access_token", access_token, {
+      maxAge: 1000 * 60 * 3, // ms * sec * min
+    });
+    res.redirect("/protected");
+  }
+);
+
+app.get("/protected", auth, (req, res) => {
+  res.send("Protected");
+});
 app.use("/auth", authRouter);
 app.use("/task", taskRouter);
 
