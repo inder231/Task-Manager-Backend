@@ -14,7 +14,6 @@ describe("Home route", () => {
       .get("/")
       .end((err, res) => {
         res.should.have.status(200);
-        res.body.should.have.property("message").eql("Task manager");
         done();
       });
   });

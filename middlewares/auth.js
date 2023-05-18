@@ -5,8 +5,8 @@ const { redis } = require("../config/redis");
 module.exports = {
   auth: async (req, res, next) => {
     try {
-      const access_token = req?.cookies?.access_token;
-      // console.log(access_token,req.cookies.refresh_token)
+      const access_token = req?.cookies?.access_token || req?.signedCookies?.access_token
+      
       if (!access_token) throw createError.Unauthorized();
 
       const isTokenBlacklisted = await redis.get(access_token);

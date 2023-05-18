@@ -18,7 +18,7 @@ const app = express();
 
 const port = process.env.PORT || 8080;
 
-app.use(cookieParser());
+app.use(cookieParser(process.env.COOKIE_PARSER_SECRET));
 app.use(express.json()); // body parser
 app.use(express.urlencoded({ extended: true })); //  parses data passed in urlencoded form
 app.use(express.static("public"));
@@ -27,13 +27,7 @@ app.use(
     origin: "*",
   })
 );
-// app.use(
-//   session({
-//     secret: "YourSessionSecret",
-//     resave: false,
-//     saveUninitialized: false,
-//   })
-// );
+
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -54,15 +48,17 @@ app.get(
     session: false,
   }),
   function (req, res) {
-    console.log("inside callback", req.user);
     // Generate jwt token and store in cookies
     const access_token = jwt.sign({ ...req.user }, process.env.JWT_ACCESS_KEY, {
       expiresIn: "1m",
     });
     res.cookie("access_token", access_token, {
       maxAge: 1000 * 60 * 3, // ms * sec * min
+      httpOnly: true,
+      sameSite: "strict",
+      signed: true,
     });
-    res.redirect("/protected");
+    res.redirect("/");
   }
 );
 

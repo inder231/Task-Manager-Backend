@@ -104,8 +104,20 @@ authRouter.get("/refresh-token", async (req, res, next) => {
       process.env.JWT_ACCESS_KEY,
       { expiresIn: "1m" }
     );
+    const newRefreshToken = jwt.sign(
+      { userId, email, role },
+      process.env.JWT_REFRESH_KEY,
+      { expiresIn: "3m" }
+    );
     res.cookie("access_token", newAccessToken, {
       maxAge: 1000 * 60 * 3, // ms * sec * min
+      httpOnly: true,
+      sameSite: "strict",
+    });
+    res.cookie("refresh_token", newRefreshToken, {
+      maxAge: 1000 * 60 * 6, // ms * sec * min
+      httpOnly: true,
+      sameSite: "strict",
     });
     res.sendStatus(204);
   } catch (error) {
