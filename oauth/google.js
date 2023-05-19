@@ -21,9 +21,9 @@ passport.use(
               password: uuidv4(),
             });
             await newUser.save();
-            return cb(null, { userId: newUser._id, email: newUser.email });
+            return cb(null, { accessToken,userId: newUser._id, email: newUser.email });
           } else {
-            return cb(null, { userId: user._id, email: user.email });
+            return cb(null, { accessToken,userId: user._id, email: user.email });
           }
         })
         .catch((err) => {
