@@ -22,7 +22,7 @@ const port = process.env.PORT || 8080;
 app.use(cookieParser(process.env.COOKIE_PARSER_SECRET));
 app.use(express.json()); // body parser
 app.use(express.urlencoded({ extended: true })); //  parses data passed in urlencoded form
-app.use(express.static("public"));
+// app.use(express.static("public"));
 app.use(
   cors({
     origin: "*",
@@ -53,18 +53,18 @@ app.get(
   }),
   function (req, res) {
     // Generate jwt token and store in cookies
-    // const access_token = jwt.sign({ ...req.user }, process.env.JWT_ACCESS_KEY, {
-    //   expiresIn: "1m",
-    // });
-    const access_token = req.user.accessToken;
+    const access_token = jwt.sign({ ...req.user }, process.env.JWT_ACCESS_KEY, {
+      expiresIn: "1m",
+    });
+    // const access_token = req.user.accessToken;
     // console.log("LINE 59",req.user.accessToken);
     res.cookie("access_token", access_token, {
       maxAge: 1000 * 60 * 3, // ms * sec * min
       httpOnly: true,
-      sameSite: "strict",
+      sameSite: "Lax",
       signed: true,
     });
-    res.redirect("/");
+    res.sendStatus(200);
   }
 );
 
@@ -107,7 +107,7 @@ app.get("/protected", async (req, res) => {
   }
 });
 app.use("/auth", authRouter);
-app.use("/task", taskRouter);
+app.use("/task",auth, taskRouter);
 
 // Handling the route which is not created.
 app.use((req, res, next) => {

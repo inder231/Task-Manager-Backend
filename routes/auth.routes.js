@@ -68,8 +68,7 @@ authRouter.post("/login", async (req, res, next) => {
     res.cookie("refresh_token", refresh_token, {
       maxAge: 1000 * 60 * 6, // ms * sec * min
     });
-
-    res.status(200).send({ message: "Login success." });
+    res.status(200).send({ message: "Login success."});
   } catch (error) {
     next(error);
   }
