@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha tests/*.test.js --timeout 20000 --exit",
-    "start": "node index.js",
     "dev": "nodemon index.js"
   },
   "keywords": [],
