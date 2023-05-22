@@ -70,14 +70,14 @@ authRouter.post("/login", async (req, res, next) => {
       httpOnly: true,
       sameSite: "Lax",
       signed: true,
-      domain:".task-manager-frontend-two.vercel.app"
+      domain: "https://task-manager-frontend-two.vercel.app",
     });
     res.cookie("refresh_token", refresh_token, {
       maxAge: 1000 * 60 * 6, // ms * sec * min
       httpOnly: true,
       sameSite: "Lax",
       signed: true,
-      domain:".task-manager-frontend-two.vercel.app"
+      domain: "https://task-manager-frontend-two.vercel.app",
     });
     res.status(200).send({ message: "Login success." });
   } catch (error) {
