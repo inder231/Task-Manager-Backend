@@ -66,7 +66,7 @@ authRouter.post("/login", async (req, res, next) => {
     res.header("Access-Control-Allow-Credentials", "true");
     res.cookie("access_token", access_token, {
       maxAge: 1000 * 60 * 3, // ms * sec * min
-      // httpOnly: true,
+      httpOnly: true,
       sameSite: "Lax",
       signed: true,
     });
