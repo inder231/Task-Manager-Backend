@@ -71,6 +71,7 @@ app.get(
       httpOnly: true,
       sameSite: "Lax",
       signed: true,
+      domain:".task-manager-frontend-two.vercel.app"
     });
     res.sendStatus(200);
   }
