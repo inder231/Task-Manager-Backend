@@ -139,9 +139,9 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(port, async () => {
+async () => await connection;
+app.listen(port, () => {
   try {
-    await connection;
     console.log(`Listening on http://localhost:${port}`);
   } catch (error) {
     console.log(`Error connecting: ${error.message}`);
