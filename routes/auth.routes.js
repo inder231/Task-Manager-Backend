@@ -75,6 +75,7 @@ authRouter.post("/login", async (req, res, next) => {
       sameSite: "Lax",
       signed: true,
     });
+    res.header("Access-Control-Allow-Credentials", "true");
     res.status(200).send({ message: "Login success."});
   } catch (error) {
     next(error);
