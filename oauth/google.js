@@ -1,4 +1,4 @@
-var GoogleStrategy = require("passport-google-oauth20");
+var GoogleStrategy = require("passport-google-oauth20");  
 const passport = require("passport");
 const { User } = require("../models/user.model");
 const { v4: uuidv4 } = require("uuid");

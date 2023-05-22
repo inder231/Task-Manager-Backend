@@ -20,22 +20,32 @@ const app = express();
 const port = process.env.PORT || 8080;
 
 app.use(cookieParser(process.env.COOKIE_PARSER_SECRET));
+// app.use(
+//   session({
+//     resave: false,
+//     saveUninitialized: false,
+//     secret: "session",
+//     cookie: {
+//       maxAge: 1000 * 60 * 60,
+//       sameSite: "none",
+//       secure: false,
+//     },
+//   })
+// );
 app.use(express.json()); // body parser
 app.use(express.urlencoded({ extended: true })); //  parses data passed in urlencoded form
-// app.use(express.static("public"));
 app.use(
   cors({
     origin: "*",
   })
 );
 
-const CLIENT_ID = "299d269ce9ecca814fc0";
-const CLIENT_SECRET = "45d41ca76545d475a01a848242f3215b61b42146";
-
 const isProduction = process.env.NODE_ENV === "production";
 
 // Home route
 app.get("/", (req, res) => {
+  console.log(req.session);
+  console.log(req.cookies);
   res.status(200).send({ message: "Task manager" });
 });
 
@@ -74,7 +84,11 @@ app.get("/auth/github", async (req, res, next) => {
   try {
     const response = await axios.post(
       "https://github.com/login/oauth/access_token",
-      { client_id: CLIENT_ID, client_secret: CLIENT_SECRET, code }
+      {
+        client_id: process.env.GITHUB_CLIENT_ID,
+        client_secret: process.env.GITHUB_CLIENT_SECRET,
+        code,
+      }
     );
     // console.log(response.data,"response");
     const access_token = response.data.split("=")[1].split("&")[0];
@@ -107,7 +121,7 @@ app.get("/protected", async (req, res) => {
   }
 });
 app.use("/auth", authRouter);
-app.use("/task",auth, taskRouter);
+app.use("/task", auth, taskRouter);
 
 // Handling the route which is not created.
 app.use((req, res, next) => {

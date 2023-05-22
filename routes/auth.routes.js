@@ -45,6 +45,7 @@ authRouter.post("/register", async (req, res, next) => {
 authRouter.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
+    console.log(email,password);
     const isUserPresent = await User.findOne({ email });
     if (!isUserPresent) throw createError.NotFound("User not registered.");
     const verifyPassword = await isUserPresent.isPasswordValid(password);
@@ -64,9 +65,15 @@ authRouter.post("/login", async (req, res, next) => {
 
     res.cookie("access_token", access_token, {
       maxAge: 1000 * 60 * 3, // ms * sec * min
+      httpOnly: true,
+      sameSite: "Lax",
+      signed: true,
     });
     res.cookie("refresh_token", refresh_token, {
       maxAge: 1000 * 60 * 6, // ms * sec * min
+      httpOnly: true,
+      sameSite: "Lax",
+      signed: true,
     });
     res.status(200).send({ message: "Login success."});
   } catch (error) {
