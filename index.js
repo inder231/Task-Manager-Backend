@@ -73,7 +73,7 @@ app.get(
       signed: true,
       domain:"https://task-manager-frontend-two.vercel.app"
     });
-    res.sendStatus(200);
+    res.redirect("https://task-manager-frontend-two.vercel.app")
   }
 );
 
