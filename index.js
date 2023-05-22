@@ -69,9 +69,9 @@ app.get(
     res.cookie("access_token", access_token, {
       maxAge: 1000 * 60 * 3, // ms * sec * min
       httpOnly: true,
-      sameSite: "Lax",
-      signed: true,
-      domain:"https://task-manager-frontend-two.vercel.app"
+      // sameSite: "Lax",
+      // signed: true,
+      // domain:"https://task-manager-frontend-two.vercel.app"
     });
     res.redirect("https://task-manager-frontend-two.vercel.app")
   }
