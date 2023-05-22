@@ -44,8 +44,6 @@ const isProduction = process.env.NODE_ENV === "production";
 
 // Home route
 app.get("/", (req, res) => {
-  console.log(req.session);
-  console.log(req.cookies);
   res.status(200).send({ message: "Task manager" });
 });
 

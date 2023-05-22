@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const createError = require("http-errors");
 const { redis } = require("../config/redis");
 const { auth } = require("../middlewares/auth");
+const passport = require("passport");
 
 const authRouter = require("express").Router();
 
@@ -131,5 +132,59 @@ authRouter.get("/refresh-token", async (req, res, next) => {
     next(error);
   }
 });
+// ------------- Google ----------- oauth
+// authRouter.get(
+//   "/google",
+//   passport.authenticate("google", { scope: ["profile", "email"] })
+// );
+// authRouter.get(
+//   "/google/callback",
+//   passport.authenticate("google", {
+//     failureRedirect: "/auth/google",
+//     session: false,
+//   }),
+//   function (req, res) {
+//     // Generate jwt token and store in cookies
+//     const access_token = jwt.sign({ ...req.user }, process.env.JWT_ACCESS_KEY, {
+//       expiresIn: "1m",
+//     });
+//     // const access_token = req.user.accessToken;
+//     // console.log("LINE 59",req.user.accessToken);
+//     res.cookie("access_token", access_token, {
+//       maxAge: 1000 * 60 * 3, // ms * sec * min
+//       httpOnly: true,
+//       sameSite: "Lax",
+//       signed: true,
+//     });
+//     res.sendStatus(200);
+//   }
+// );
+// ------------- GitHub ------------ oauth
+// authRouter.get("/github", async (req, res, next) => {
+//   const { code } = req.query;
+//   try {
+//     const response = await axios.post(
+//       "https://github.com/login/oauth/access_token",
+//       {
+//         client_id: process.env.GITHUB_CLIENT_ID,
+//         client_secret: process.env.GITHUB_CLIENT_SECRET,
+//         code,
+//       }
+//     );
+//     // console.log(response.data,"response");
+//     const access_token = response.data.split("=")[1].split("&")[0];
+
+//     // Getting user data;
+//     const { data } = await axios.get("https://api.github.com/user", {
+//       headers: {
+//         Authorization: `Bearer ${access_token}`,
+//       },
+//     });
+
+//     res.json(data);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 module.exports = { authRouter };

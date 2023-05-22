@@ -8,7 +8,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:8080/auth/google/callback",
+      callbackURL: "https://clever-mite-overcoat.cyclic.app/auth/google/callback",
     },
     function (accessToken, refreshToken, profile, cb) {
       User.findOne({ email: profile.emails[0].value })
