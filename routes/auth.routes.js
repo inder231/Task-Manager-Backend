@@ -70,14 +70,14 @@ authRouter.post("/login", async (req, res, next) => {
       httpOnly: true,
       sameSite: "Lax",
       signed: true,
-      domain: "https://task-manager-frontend-two.vercel.app",
+      domain: "task-manager-frontend-two.vercel.app",
     });
     res.cookie("refresh_token", refresh_token, {
       maxAge: 1000 * 60 * 6, // ms * sec * min
       httpOnly: true,
       sameSite: "Lax",
       signed: true,
-      domain: "https://task-manager-frontend-two.vercel.app",
+      domain: "task-manager-frontend-two.vercel.app",
     });
     res.status(200).send({ message: "Login success." });
   } catch (error) {
@@ -134,7 +134,7 @@ authRouter.get("/refresh-token", async (req, res, next) => {
     next(error);
   }
 });
-// ------------- Google ----------- oauth
+// // ------------- Google ----------- oauth
 // authRouter.get(
 //   "/google",
 //   passport.authenticate("google", { scope: ["profile", "email"] })
@@ -161,7 +161,7 @@ authRouter.get("/refresh-token", async (req, res, next) => {
 //     res.sendStatus(200);
 //   }
 // );
-// ------------- GitHub ------------ oauth
+// // ------------- GitHub ------------ oauth
 // authRouter.get("/github", async (req, res, next) => {
 //   const { code } = req.query;
 //   try {
@@ -173,17 +173,25 @@ authRouter.get("/refresh-token", async (req, res, next) => {
 //         code,
 //       }
 //     );
-//     // console.log(response.data,"response");
-//     const access_token = response.data.split("=")[1].split("&")[0];
+//     console.log(response.data,"response");
+//     const github_access_token = response.data.split("=")[1].split("&")[0];
 
 //     // Getting user data;
 //     const { data } = await axios.get("https://api.github.com/user", {
 //       headers: {
-//         Authorization: `Bearer ${access_token}`,
+//         Authorization: `Bearer ${github_access_token}`,
 //       },
 //     });
-
-//     res.json(data);
+//     const access_token = jwt.sign({ ...req.user }, process.env.JWT_ACCESS_KEY, {
+//       expiresIn: "1m",
+//     });
+//     res.cookie("access_token", access_token, {
+//       maxAge: 1000 * 60 * 3, // ms * sec * min
+//       httpOnly: true,
+//       sameSite: "Lax",
+//       signed: true,
+//     });
+//     res.redirect("https://task-manager-frontend-two.vercel.app");
 //   } catch (error) {
 //     next(error);
 //   }

@@ -64,16 +64,14 @@ app.get(
     const access_token = jwt.sign({ ...req.user }, process.env.JWT_ACCESS_KEY, {
       expiresIn: "1m",
     });
-    // const access_token = req.user.accessToken;
-    // console.log("LINE 59",req.user.accessToken);
     res.cookie("access_token", access_token, {
       maxAge: 1000 * 60 * 3, // ms * sec * min
       httpOnly: true,
-      // sameSite: "Lax",
-      // signed: true,
-      // domain:"https://task-manager-frontend-two.vercel.app"
+      sameSite: "Lax",
+      signed: true,
+      domain: "task-manager-frontend-two.vercel.app",
     });
-    res.redirect("https://task-manager-frontend-two.vercel.app")
+    res.redirect("https://task-manager-frontend-two.vercel.app");
   }
 );
 
@@ -98,7 +96,12 @@ app.get("/auth/github", async (req, res, next) => {
         Authorization: `Bearer ${access_token}`,
       },
     });
-
+    const resp = await axios.get("https://api.github.com/user/emails", {
+      headers: {
+        Authorization: `token ${access_token}`,
+      },
+    });
+    console.log(resp);
     res.json(data);
   } catch (error) {
     next(error);
