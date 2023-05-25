@@ -46,7 +46,7 @@ authRouter.post("/register", async (req, res, next) => {
 authRouter.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    console.log(email, password);
+
     const isUserPresent = await User.findOne({ email });
     if (!isUserPresent) throw createError.NotFound("User not registered.");
     const verifyPassword = await isUserPresent.isPasswordValid(password);
@@ -56,28 +56,28 @@ authRouter.post("/login", async (req, res, next) => {
     const access_token = jwt.sign(
       { userId: isUserPresent._id, email, role: isUserPresent.role },
       process.env.JWT_ACCESS_KEY,
-      { expiresIn: "1m" }
+      { expiresIn: "2m" }
     );
     const refresh_token = jwt.sign(
       { userId: isUserPresent._id, email, role: isUserPresent.role },
       process.env.JWT_REFRESH_KEY,
-      { expiresIn: "3m" }
+      { expiresIn: "5m" }
     );
-
-    res.header("Access-Control-Allow-Credentials", "true");
     res.cookie("access_token", access_token, {
       maxAge: 1000 * 60 * 3, // ms * sec * min
       httpOnly: true,
+      // origin:"http://localhost:3000",
+      secure:true,
       sameSite: "Lax",
-      signed: true,
-      domain: "vercel.app",
+      signed: true
     });
     res.cookie("refresh_token", refresh_token, {
       maxAge: 1000 * 60 * 6, // ms * sec * min
       httpOnly: true,
+      // origin:"http://localhost:3000",
+      secure:true,
       sameSite: "Lax",
-      signed: true,
-      domain: "vercel.app",
+      signed: true
     });
     res.status(200).send({ message: "Login success." });
   } catch (error) {

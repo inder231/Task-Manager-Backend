@@ -36,11 +36,21 @@ app.use(express.json()); // body parser
 app.use(express.urlencoded({ extended: true })); //  parses data passed in urlencoded form
 app.use(
   cors({
-    origin: "*",
+    origin: true,
+    credentials: true,
   })
 );
 
 const isProduction = process.env.NODE_ENV === "production";
+// Headers config for check cookies set or not
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", req.headers.origin);
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 
 // Home route
 app.get("/", (req, res) => {
