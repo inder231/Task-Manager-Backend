@@ -123,11 +123,13 @@ authRouter.get("/refresh-token", async (req, res, next) => {
       maxAge: 1000 * 60 * 3, // ms * sec * min
       httpOnly: true,
       sameSite: "strict",
+      origin:"https://task-manager-frontend-two.vercel.app/"
     });
     res.cookie("refresh_token", newRefreshToken, {
       maxAge: 1000 * 60 * 6, // ms * sec * min
       httpOnly: true,
       sameSite: "strict",
+      origin:"https://task-manager-frontend-two.vercel.app/"
     });
     res.sendStatus(204);
   } catch (error) {
