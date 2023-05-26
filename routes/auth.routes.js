@@ -63,25 +63,23 @@ authRouter.post("/login", async (req, res, next) => {
       process.env.JWT_REFRESH_KEY,
       { expiresIn: "5m" }
     );
-    res.header(
-      "Access-Control-Allow-Origin: https://task-manager-frontend-two.vercel.app/"
-    );
-    res.header("Access-Control-Allow-Credentials: true");
-    res.header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
-    res.header("Access-Control-Allow-Headers: Content-Type, *");
     res.cookie("access_token", access_token, {
       maxAge: 1000 * 60 * 3, // ms * sec * min
       httpOnly: true,
-      // secure: true,
-      // signed: true,
-      origin: "https://task-manager-frontend-two.vercel.app/",
+      // origin:"http://localhost:3000",
+      secure:true,
+      sameSite: "Lax",
+      signed: true,
+      domain:"vercel.app"
     });
     res.cookie("refresh_token", refresh_token, {
       maxAge: 1000 * 60 * 6, // ms * sec * min
       httpOnly: true,
-      // secure: true,
-      // signed: true,
-      origin: "https://task-manager-frontend-two.vercel.app/",
+      // origin:"http://localhost:3000",
+      secure:true,
+      sameSite: "Lax",
+      signed: true,
+      domain:"vercel.app"
     });
     res.status(200).send({ message: "Login success." });
   } catch (error) {
@@ -126,15 +124,11 @@ authRouter.get("/refresh-token", async (req, res, next) => {
     res.cookie("access_token", newAccessToken, {
       maxAge: 1000 * 60 * 3, // ms * sec * min
       httpOnly: true,
-      sameSite: "strict",
-      origin: "https://task-manager-frontend-two.vercel.app/",
-    });
+      sameSite: "strict",    });
     res.cookie("refresh_token", newRefreshToken, {
       maxAge: 1000 * 60 * 6, // ms * sec * min
       httpOnly: true,
-      sameSite: "strict",
-      origin: "https://task-manager-frontend-two.vercel.app/",
-    });
+      sameSite: "strict",    });
     res.sendStatus(204);
   } catch (error) {
     next(error);
