@@ -63,6 +63,12 @@ authRouter.post("/login", async (req, res, next) => {
       process.env.JWT_REFRESH_KEY,
       { expiresIn: "5m" }
     );
+    res.header(
+      "Access-Control-Allow-Origin: https://task-manager-frontend-two.vercel.app/"
+    );
+    res.header("Access-Control-Allow-Credentials: true");
+    res.header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
+    res.header("Access-Control-Allow-Headers: Content-Type, *");
     res.cookie("access_token", access_token, {
       maxAge: 1000 * 60 * 3, // ms * sec * min
       httpOnly: true,
