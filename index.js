@@ -54,6 +54,10 @@ app.use(function (req, res, next) {
 
 // Home route
 app.get("/", (req, res) => {
+  res.cookie('auth-token', 123123, {
+    httpOnly: true,
+    maxAge:1000*60*3
+})
   res.status(200).send({ message: "Task manager" });
 });
 
