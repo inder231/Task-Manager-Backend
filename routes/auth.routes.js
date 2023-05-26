@@ -68,7 +68,6 @@ authRouter.post("/login", async (req, res, next) => {
       httpOnly: true,
       // origin:"http://localhost:3000",
       secure: true,
-      sameSite: "Lax",
       signed: true,
       origin: "https://task-manager-frontend-two.vercel.app/",
     });
@@ -77,7 +76,6 @@ authRouter.post("/login", async (req, res, next) => {
       httpOnly: true,
       // origin:"http://localhost:3000",
       secure: true,
-      sameSite: "Lax",
       signed: true,
       origin: "https://task-manager-frontend-two.vercel.app/",
     });
