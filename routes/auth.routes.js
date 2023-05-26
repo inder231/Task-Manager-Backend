@@ -67,17 +67,19 @@ authRouter.post("/login", async (req, res, next) => {
       maxAge: 1000 * 60 * 3, // ms * sec * min
       httpOnly: true,
       // origin:"http://localhost:3000",
-      secure:true,
+      secure: true,
       sameSite: "Lax",
-      signed: true
+      signed: true,
+      origin: "https://task-manager-frontend-two.vercel.app/",
     });
     res.cookie("refresh_token", refresh_token, {
       maxAge: 1000 * 60 * 6, // ms * sec * min
       httpOnly: true,
       // origin:"http://localhost:3000",
-      secure:true,
+      secure: true,
       sameSite: "Lax",
-      signed: true
+      signed: true,
+      origin: "https://task-manager-frontend-two.vercel.app/",
     });
     res.status(200).send({ message: "Login success." });
   } catch (error) {
@@ -123,13 +125,13 @@ authRouter.get("/refresh-token", async (req, res, next) => {
       maxAge: 1000 * 60 * 3, // ms * sec * min
       httpOnly: true,
       sameSite: "strict",
-      origin:"https://task-manager-frontend-two.vercel.app/"
+      origin: "https://task-manager-frontend-two.vercel.app/",
     });
     res.cookie("refresh_token", newRefreshToken, {
       maxAge: 1000 * 60 * 6, // ms * sec * min
       httpOnly: true,
       sameSite: "strict",
-      origin:"https://task-manager-frontend-two.vercel.app/"
+      origin: "https://task-manager-frontend-two.vercel.app/",
     });
     res.sendStatus(204);
   } catch (error) {
